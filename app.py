@@ -2,6 +2,7 @@ import openpyxl as xlxs
 import threading as th
 import numpy as np
 import os
+import shutil
 from time import sleep
 excel_instace = xlxs.load_workbook('./nameDirs.xlsx')
 data_frame = excel_instace.active
@@ -66,12 +67,15 @@ def assing_new_task(index):
 def resolve_task(array_task):
     print('hola ' + str(th.currentThread().getName()))
     for data in array_task:
-        index, code, ref = data
+        index, init, target,code = data
         # verifier exist directory
-        if os.path.exists(DIRECORY_FOTOS+str(code)):
-            os.rename(DIRECORY_FOTOS+str(code),
-                      DIRECORY_FOTOS+str(ref)+'-'+str(code))
-            print('renombrado de '+str(code)+' a '+str(ref)+'-'+str(code))
+        if os.path.exists(DIRECORY_FOTOS+str(init)) and os.path.exists(DIRECORY_FOTOS+str(target)+'-'+str(code)):
+            shutil.rmtree(DIRECORY_FOTOS+str(init))
+            continue
+        if os.path.exists(DIRECORY_FOTOS+str(init)):
+            os.rename(DIRECORY_FOTOS+str(init),
+                      DIRECORY_FOTOS+str(target)+'-'+str(code))
+            print('renombrado de '+str(code)+' a '+str(target)+'-'+str(code))
 
 
 hilos = 10
